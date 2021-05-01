@@ -5,6 +5,12 @@ VisualStudioVersion = 16.0.31129.286
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicTacToeAPI", "TicTacToeAPI\TicTacToeAPI.csproj", "{7B81EF7B-EB2C-461A-A828-081CCF44C568}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Databases", "Databases", "{DDE17BC5-B02D-42F1-8A58-AE77529E31A0}"
+	ProjectSection(SolutionItems) = preProject
+		migrations.txt = migrations.txt
+		..\Databases\tictactoe.db = ..\Databases\tictactoe.db
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

@@ -10,6 +10,13 @@ namespace TicTacToeAPI.Infrastructure.Repositories.DBContext
 
     }
 
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+      modelBuilder.Entity<Game>()
+        .ToTable("tictactoegame")
+        .HasKey(x => x.Id);
+    }
+
     public DbSet<Game> TicTacToeGame { get; set; }
   }
 }

@@ -1,0 +1,2 @@
+add-migration initial -o "Infrastructure/Migrations"
+update-database
