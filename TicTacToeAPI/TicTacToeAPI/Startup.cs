@@ -6,6 +6,10 @@ using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
 using Serilog.Exceptions;
+using TicTacToeAPI.Infrastructure.Repositories;
+using TicTacToeAPI.Infrastructure.Repositories.Contracts;
+using TicTacToeAPI.Service;
+using TicTacToeAPI.Service.Contract;
 
 namespace TicTacToeAPI
 {
@@ -34,6 +38,9 @@ namespace TicTacToeAPI
       services.AddControllers();
 
       services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));
+
+      services.AddTransient<IGameRepo, GameRepo>();
+      services.AddTransient<IGameService, GameService>();
 
     }
 
