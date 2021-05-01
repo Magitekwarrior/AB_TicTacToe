@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
 using Serilog.Exceptions;
+using TicTacToeAPI.Infrastructure.Filter;
 using TicTacToeAPI.Infrastructure.Repositories;
 using TicTacToeAPI.Infrastructure.Repositories.Contracts;
 using TicTacToeAPI.Infrastructure.Repositories.DBContext;
@@ -44,6 +45,8 @@ namespace TicTacToeAPI
 
       services.AddTransient<IGameRepo, GameRepo>();
       services.AddTransient<IGameService, GameService>();
+
+      services.AddMvc(options => options.Filters.Add(typeof(ExceptionFilter)));
 
     }
 
