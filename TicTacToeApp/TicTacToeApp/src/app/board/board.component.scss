@@ -1,0 +1,27 @@
+main {
+  width: 600px;
+  display: flex;
+  justify-content: space-evenly;
+  align-content: space-between;
+  align-items: center;
+  margin: 7% auto 50px auto;
+  flex-wrap: wrap;
+}
+
+div {
+  width: 600px;
+  display: flex;
+  justify-content: space-evenly;
+  align-content: space-between;
+  align-items: center;
+  margin: 7% auto 50px auto;
+  flex-wrap: wrap;
+}
+
+app-square {
+  border: 1px gray solid;
+  height: 200px;
+  flex: 0 0 32%;
+}
+
+
