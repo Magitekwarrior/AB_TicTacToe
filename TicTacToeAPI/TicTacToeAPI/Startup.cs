@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -8,6 +9,7 @@ using Serilog.Events;
 using Serilog.Exceptions;
 using TicTacToeAPI.Infrastructure.Repositories;
 using TicTacToeAPI.Infrastructure.Repositories.Contracts;
+using TicTacToeAPI.Infrastructure.Repositories.DBContext;
 using TicTacToeAPI.Service;
 using TicTacToeAPI.Service.Contract;
 
@@ -38,6 +40,7 @@ namespace TicTacToeAPI
       services.AddControllers();
 
       services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));
+      services.AddDbContext<GameContext>(o => o.UseSqlite(Configuration.GetConnectionString("Database")));
 
       services.AddTransient<IGameRepo, GameRepo>();
       services.AddTransient<IGameService, GameService>();
