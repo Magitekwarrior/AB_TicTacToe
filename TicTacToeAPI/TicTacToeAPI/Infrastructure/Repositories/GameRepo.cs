@@ -22,7 +22,9 @@ namespace TicTacToeAPI.Infrastructure.Repositories
     {
       var game = new Game()
       {
-        Player1Name = PlayerName
+        Player1Name = PlayerName,
+        Player2Name = "CPU",
+        GameStartDate = DateTime.Now
       };
 
       await _dbContext.TicTacToeGames.AddAsync(game);
