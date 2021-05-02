@@ -1,17 +1,25 @@
 import { Component, OnInit } from '@angular/core';
 import { GameService } from '../game.service';
 
+import { GameModel } from '../models/game.model';
+import { MoveModel } from '../models/playermove.model';
+
 @Component({
   selector: 'app-board',
   templateUrl: './board.component.html',
-  styleUrls: ['./board.component.scss']
+  styleUrls: ['./board.component.scss'],
 })
-
 export class BoardComponent implements OnInit {
   squares: string[] = [];
   xIsNext: boolean = true;
   outcome: string = '';
   isGameOver: boolean = false;
+  startGame: boolean = false; // hidden by default
+  activePlayer: string = '';
+
+  currentGameBoard: GameModel = new GameModel();
+  nextMove: MoveModel = new MoveModel();
+  currentMove: MoveModel = new MoveModel();
 
   constructor(public gameService: GameService) {}
 
@@ -23,23 +31,14 @@ export class BoardComponent implements OnInit {
     this.squares = Array(9).fill('');
     this.outcome = '';
     this.xIsNext = true;
-    this.isGameOver =  false;
-c
-    /*
-    this.activePlayer = "X";
-    this.turnCount = 0;
+    this.isGameOver = false;
+    this.startGame = true;
+    this.activePlayer = 'USER';
 
-    public board = [];
-    boardSize: number = 9;
-    activePlayer: string = "X";
-    turnCount: number = 0;
-    isGameRunning: boolean = false;
-    isGameOver: boolean = false;
-    winner: boolean = false;
-    */
-   // TODO Call Gameservice method 'getNewGame'
-   // gameService.getNewGame
-
+    this.gameService.postNewGame().subscribe((data: GameModel) => {
+      console.log('game: ', data);
+      this.currentGameBoard = data;
+    });
   }
 
   get player() {
@@ -47,21 +46,43 @@ c
   }
 
   makeMove(idx: number) {
-    if (!this.isGameOver){
-      if (!this.squares[idx]) {
-        this.squares.splice(idx, 1, this.player);
-        this.xIsNext = !this.xIsNext;
-      }
+    if (this.isGameOver) return;
 
-      var playerWon = this.calculateWinner();
-      if (playerWon == "DRAW"){
-        this.outcome = "Game is a DRAW" ;
-      }
-      else{
-        this.outcome = "Player " + playerWon + " won the game!" ;
-      }
-    }
+    console.log('idx: ' + idx);
+    console.log('squares 1st:', this.squares);
 
+    this.currentMove.gameId = this.currentGameBoard.id;
+    this.currentMove.cell = idx + 1;
+    this.currentMove.value = 'X';
+
+    // Get Cpu's next move
+    this.gameService
+      .postPlayNextMove(this.currentMove)
+      .subscribe((data: MoveModel) => {
+        console.log('postPlayNextMove: ', data);
+        this.nextMove = data;
+
+        if (!this.squares[idx]) {
+          this.squares.splice(idx, 1, this.player);
+          //this.squares[idx] = this.player;
+          //this.xIsNext = !this.xIsNext;
+        }
+
+        var outcome = this.calculateWinner();
+        console.log('outcome:', outcome);
+        if (!outcome) {
+          // CPU makes their move.
+          var newIdx = this.nextMove.cell - 1;
+          console.log('newIdx', newIdx)
+          this.squares[newIdx] = this.nextMove.value;
+        } else if (outcome == 'DRAW') {
+          this.outcome = 'Game is a DRAW';
+        } else {
+          this.outcome = 'Player ' + outcome + ' won the game!';
+        }
+
+        console.log('squares:', this.squares);
+      });
   }
 
   calculateWinner() {
@@ -73,7 +94,7 @@ c
       [1, 4, 7],
       [2, 5, 8],
       [0, 4, 8],
-      [2, 4, 6]
+      [2, 4, 6],
     ];
 
     for (let i = 0; i < lines.length; i++) {
@@ -88,7 +109,7 @@ c
       }
     }
 
-    if (!this.squares.includes('')){
+    if (!this.squares.includes('')) {
       this.isGameOver = true;
       return 'DRAW';
     }
