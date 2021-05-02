@@ -17,6 +17,6 @@ namespace TicTacToeAPI.Infrastructure.Repositories.DBContext
         .HasKey(x => x.Id);
     }
 
-    public DbSet<Game> TicTacToeGame { get; set; }
+    public DbSet<Game> TicTacToeGames { get; set; }
   }
 }

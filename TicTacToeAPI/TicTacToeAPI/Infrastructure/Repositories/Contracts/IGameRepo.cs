@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using TicTacToeAPI.Infrastructure.Models;
 
@@ -6,10 +7,12 @@ namespace TicTacToeAPI.Infrastructure.Repositories.Contracts
 {
   public interface IGameRepo
   {
-    Task<IEnumerable<Game>> GetPlayersGames(string Player1Name);
+    Task<IEnumerable<Game>> GetPlayersGames(string PlayerName);
 
-    Task<Game> CreateGame();
+    Task<Game> GetGame(Guid GameId);
 
-    Task SaveMove(PlayerMove move);
+    Task<Game> CreateGame(string PlayerName);
+
+    Task SaveMove(PlayerMove Move);
   }
 }
