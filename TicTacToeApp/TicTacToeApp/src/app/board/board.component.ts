@@ -46,6 +46,7 @@ export class BoardComponent implements OnInit {
   }
 
   makeMove(idx: number) {
+    console.log('gameover?', this.isGameOver)
     if (this.isGameOver) return;
 
     console.log('idx: ' + idx);
@@ -68,20 +69,25 @@ export class BoardComponent implements OnInit {
           //this.xIsNext = !this.xIsNext;
         }
 
-        var outcome = this.calculateWinner();
-        console.log('outcome:', outcome);
-        if (!outcome) {
+        this.calculateWinner();
+        console.log('outcome:', this.outcome);
+        console.log('GameOver after player?:', this.isGameOver);
+        if (this.isGameOver)
+          return
+        else {
           // CPU makes their move.
           var newIdx = this.nextMove.cell - 1;
           console.log('newIdx', newIdx)
+
           this.squares[newIdx] = this.nextMove.value;
-        } else if (outcome == 'DRAW') {
-          this.outcome = 'Game is a DRAW';
-        } else {
-          this.outcome = 'Player ' + outcome + ' won the game!';
+
+          this.calculateWinner();
+          console.log('GameOver after CPU?:', this.isGameOver);
+          console.log('outcome:', this.outcome);
         }
 
         console.log('squares:', this.squares);
+
       });
   }
 
@@ -97,6 +103,8 @@ export class BoardComponent implements OnInit {
       [2, 4, 6],
     ];
 
+    this.outcome = '';
+
     for (let i = 0; i < lines.length; i++) {
       const [a, b, c] = lines[i];
       if (
@@ -105,15 +113,15 @@ export class BoardComponent implements OnInit {
         this.squares[a] === this.squares[c]
       ) {
         this.isGameOver = true;
-        return this.squares[a];
+        this.outcome = 'Player ' + this.squares[a] + ' won the game!';
+        return
       }
     }
 
     if (!this.squares.includes('')) {
       this.isGameOver = true;
-      return 'DRAW';
+      this.outcome = 'DRAWN GAME';
+      return
     }
-
-    return '';
   }
 }
