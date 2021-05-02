@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Events;
 using Serilog.Exceptions;
@@ -38,8 +39,6 @@ namespace TicTacToeAPI
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-      services.AddControllers();
-
       services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));
       services.AddDbContext<GameContext>(o => o.UseSqlite(Configuration.GetConnectionString("Database")));
 
@@ -48,8 +47,13 @@ namespace TicTacToeAPI
 
       services.AddMvc(options => options.Filters.Add(typeof(ExceptionFilter)));
 
+      services.AddControllers();
+
       // Register the Swagger generator, defining 1 or more Swagger documents
-      services.AddSwaggerGen();
+      services.AddSwaggerGen(c =>
+      {
+        c.SwaggerDoc("v1", new OpenApiInfo { Title = "TicTacToe", Version = "v1" });
+      });
 
     }
 
@@ -62,6 +66,8 @@ namespace TicTacToeAPI
         app.UseSwagger();
         app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "TicTacToe v1"));
       }
+
+      app.UseCors(Configuration);
 
       app.UseHttpsRedirection();
 
