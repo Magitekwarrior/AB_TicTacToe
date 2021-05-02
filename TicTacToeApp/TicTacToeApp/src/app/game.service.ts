@@ -6,42 +6,49 @@ import { HttpParams } from "@angular/common/http";
 import {  throwError } from 'rxjs';
 import { retry, catchError } from 'rxjs/operators';
 
+import { GameModel } from './models/game.model';
+import { MoveModel } from './models/playermove.model';
+
 @Injectable()
 export class GameService {
 
-  baseURL: string = "http://localhost:5001/";
+  baseURL: string = "http://localhost:5001/api/Game/";
 
-  playerOne: string = "USER";
-  playerTwo: string = "CPU"
+  playerOne: string = 'USER';
+  playerTwo: string = 'CPU';
+  gameId: string = '';
 
   constructor(private httpClient: HttpClient) {
 
   }
 
-  // get new game board from rest api
-  getNewGame(): Observable<Game> {
-    const params = new HttpParams()
-    .set('PlayerName', this.playerOne);
+  // post new game board from rest api
+  postNewGame(): Observable<GameModel> {
+    const headers = { 'content-type': 'application/json'}
+    const body=JSON.stringify({ playerName: this.playerOne});
 
-    return this.httpClient.get<Game>(this.baseURL + '/api/Game/start', {params});
+    console.log('getNewGame '+ this.baseURL + 'start' + '| params: {' + body + '}')
+
+    return this.httpClient.post<GameModel>(this.baseURL + 'start', body, {'headers':headers} );
   }
 
   // get games played previously from rest api
-  getGameHistory(): Observable<Game[]> {
-    const params = new HttpParams()
-    .set('PlayerName', this.playerOne);
-
-    console.log('getGameHistory '+ this.baseURL + '/api/Game/history' + '; params: {' + params + '}')
-    return this.httpClient.get<Game[]>(this.baseURL + '/api/Game/history', {params});
+  getGameHistory(): Observable<GameModel[]> {
+    console.log('getGameHistory '+ this.baseURL + 'history' + '| params: {' + this.playerOne + '}')
+    return this.httpClient.get<GameModel[]>(this.baseURL + 'history/' + this.playerOne );
   }
 
   // post to rest api to save player's move in current game and get next cpu move
-  postPlayNextMove(move: Move): Observable<Move> {
+  postPlayNextMove(move: MoveModel): Observable<MoveModel> {
     const headers = { 'content-type': 'application/json'}
     const body=JSON.stringify(move);
-    console.log(body)
 
-    return this.httpClient.post<Move>(this.baseURL + '/api​/Game​/{id}​/play-move', body, {'headers':headers} );
+    var postUrl = `${this.baseURL}${move.gameId}​/play-move`;
+
+    console.log('postPlayNextMove: ' + postUrl)
+    console.log('body:' + body)
+
+    return this.httpClient.post<MoveModel>(postUrl, body, {'headers':headers} );
   }
 
   handleError(error: HttpErrorResponse) {
@@ -58,27 +65,3 @@ export class GameService {
   }
 
 }
-
-interface Game {
-  id: string;
-  player1Name: string;
-  player2Name: string;
-  status: string; // 'Incomplete', 'Win', 'Draw'
-  winner: string; // '[Player1Name]'
-  gameStartDate: Date;
-  cell1: string;
-  cell2: string;
-  cell3: string;
-  cell4: string;
-  cell5: string;
-  cell6: string;
-  cell7: string;
-  cell8: string;
-  cell9: string;
-}
-
-interface Move {
-  cell: string;
-  value: string;
-}
-
