@@ -1,17 +1,19 @@
 import { Component, OnInit } from '@angular/core';
+import { GameService } from '../game.service';
 
 @Component({
   selector: 'app-board',
   templateUrl: './board.component.html',
   styleUrls: ['./board.component.scss']
 })
+
 export class BoardComponent implements OnInit {
   squares: string[] = [];
   xIsNext: boolean = true;
   outcome: string = '';
   isGameOver: boolean = false;
 
-  constructor() {}
+  constructor(public gameService: GameService) {}
 
   ngOnInit() {
     this.newGame();
@@ -22,6 +24,22 @@ export class BoardComponent implements OnInit {
     this.outcome = '';
     this.xIsNext = true;
     this.isGameOver =  false;
+c
+    /*
+    this.activePlayer = "X";
+    this.turnCount = 0;
+
+    public board = [];
+    boardSize: number = 9;
+    activePlayer: string = "X";
+    turnCount: number = 0;
+    isGameRunning: boolean = false;
+    isGameOver: boolean = false;
+    winner: boolean = false;
+    */
+   // TODO Call Gameservice method 'getNewGame'
+   // gameService.getNewGame
+
   }
 
   get player() {
@@ -42,8 +60,8 @@ export class BoardComponent implements OnInit {
       else{
         this.outcome = "Player " + playerWon + " won the game!" ;
       }
-
     }
+
   }
 
   calculateWinner() {
