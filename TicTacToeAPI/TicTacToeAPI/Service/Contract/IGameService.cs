@@ -6,9 +6,9 @@ namespace TicTacToeAPI.Service.Contract
 {
   public interface IGameService
   {
-    Task<IEnumerable<Game>> GetGamesHistory(string Player1Name);
+    Task<IEnumerable<Game>> GetGamesHistory(string PlayerName);
 
-    Task<Game> StartNewGame();
+    Task<Game> StartNewGame(string PlayerName);
 
     Task<NextMove> PlayNextMove(PlayerMove move);
   }
