@@ -24,10 +24,10 @@ namespace TicTacToeAPI.Controllers
     /// </summary>
     /// <param name="PlayerName"></param>
     /// <returns></returns>
-    [HttpGet("history")]
-    public async Task<IEnumerable<Game>> History(string PlayerName)
+    [HttpGet("history/{player}")]
+    public async Task<IEnumerable<Game>> History(string player)
     {
-      var history = await _gameService.GetGamesHistory(PlayerName);
+      var history = await _gameService.GetGamesHistory(player);
       return history;
     }
 
@@ -37,9 +37,9 @@ namespace TicTacToeAPI.Controllers
     /// <param name="PlayerName"></param>
     /// <returns></returns>
     [HttpPost("start")]
-    public async Task<Game> StartGame(string PlayerName)
+    public async Task<Game> StartGame([FromBody] Player player)
     {
-      var newGame = await _gameService.StartNewGame(PlayerName);
+      var newGame = await _gameService.StartNewGame(player.PlayerName);
       return newGame;
     }
 
@@ -49,7 +49,7 @@ namespace TicTacToeAPI.Controllers
     /// <param name="move"></param>
     /// <returns></returns>
     [HttpPost("{id}/play-move")]
-    public async Task<NextMove> PlayMove(PlayerMove move)
+    public async Task<NextMove> PlayMove([FromBody] PlayerMove move)
     {
       var nextMove = await _gameService.PlayNextMove(move);
       return nextMove;

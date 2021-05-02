@@ -19,7 +19,6 @@ namespace TicTacToeAPI.Infrastructure.Models
     public string Winner { get; set; } // '[Player1Name]'
     public DateTime GameStartDate { get; set; }
 
-
     public string Cell1 { get; set; }
     public string Cell2 { get; set; }
     public string Cell3 { get; set; }
@@ -29,6 +28,20 @@ namespace TicTacToeAPI.Infrastructure.Models
     public string Cell7 { get; set; }
     public string Cell8 { get; set; }
     public string Cell9 { get; set; }
+
+    public bool AnyEmptyCell()
+    {
+      foreach (var p in GetType().GetProperties().Where(p => p.Name.Contains("Cell")))
+      {
+        if (p.GetValue(this) == null)
+        {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
 
     public bool CellHasValue(int cell)
     {

@@ -62,6 +62,7 @@ namespace TicTacToeAPI.Infrastructure.Repositories
 
       game.SetCell(move.Cell, move.Value);
       _dbContext.TicTacToeGames.Update(game);
+      await _dbContext.SaveChangesAsync();
     }
   }
 }

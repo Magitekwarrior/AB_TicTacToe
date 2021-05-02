@@ -43,7 +43,7 @@ namespace TicTacToeAPI.Service
 
         // Get saved board including player's latest move
         var currentGame = await _gameRepo.GetGame(move.GameId);
-        if (IsGameComplete(currentGame))
+        if (!IsGameComplete(currentGame))
         {
           var nextCpuMove = GetCpuMove(currentGame);
 
@@ -64,16 +64,8 @@ namespace TicTacToeAPI.Service
 
     private bool IsGameComplete(Game currentGame)
     {
-      // TODO: determine if the game is won or not
-      // TODO: determine if there is a need for the game to continue depending on how many cells are left and if a win is possible
-
-      Random randomNo = new Random();
-      if (randomNo.Next(100) < 20)
-      {// will be true 20% of the time
-        return false;
-      }
-
-      return true;
+      var result = currentGame.AnyEmptyCell();
+      return !result;
     }
 
     /// <summary>
