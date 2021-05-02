@@ -5,7 +5,9 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>C:\GIT\AB_TicTacToe\TicTacToeAPI\TicTacToeAPI\TicTacToeAPI.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\netcoreapp3.1\TicTacToeAPI.xml</DocumentationFile>
+    <DefineConstants>TRACE;DEBUG;NETCOREAPP3_1</DefineConstants>
+    <OutputPath>bin\Debug\</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,5 +23,13 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
   </ItemGroup>
 
+  <Target Name="SwaggerFile">
+    <ItemGroup>
+      <_CustomFiles Include="bin\(Configuration)\(Platform)\*.xml" />
+      <FilesForPackagingFromProject Include="%(_CustomFiles.Identity)">
+        <DestinationRelativePath>%(RecursiveDir)%(Filename)%(Extension)</DestinationRelativePath>
+      </FilesForPackagingFromProject>
+    </ItemGroup>
+  </Target>
 
 </Project>
