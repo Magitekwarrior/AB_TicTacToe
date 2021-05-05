@@ -46,7 +46,7 @@ export class BoardComponent implements OnInit {
   }
 
   makeMove(idx: number) {
-    console.log('gameover?', this.isGameOver)
+    console.log('gameover?', this.isGameOver);
     if (this.isGameOver) return;
 
     console.log('idx: ' + idx);
@@ -56,39 +56,36 @@ export class BoardComponent implements OnInit {
     this.currentMove.cell = idx + 1;
     this.currentMove.value = 'X';
 
-    // Get Cpu's next move
-    this.gameService
-      .postPlayNextMove(this.currentMove)
-      .subscribe((data: MoveModel) => {
-        console.log('postPlayNextMove: ', data);
-        this.nextMove = data;
-
-        if (!this.squares[idx]) {
-          this.squares.splice(idx, 1, this.player);
-          //this.squares[idx] = this.player;
-          //this.xIsNext = !this.xIsNext;
-        }
-
-        this.calculateWinner();
-        console.log('outcome:', this.outcome);
-        console.log('GameOver after player?:', this.isGameOver);
-        if (this.isGameOver)
-          return
-        else {
-          // CPU makes their move.
-          var newIdx = this.nextMove.cell - 1;
-          console.log('newIdx', newIdx)
-
-          this.squares[newIdx] = this.nextMove.value;
+    if (!this.squares[idx]) {
+      this.squares.splice(idx, 1, this.player);
+      //this.squares[idx] = this.player;
+      //this.xIsNext = !this.xIsNext;
+      // Get Cpu's next move
+      this.gameService
+        .postPlayNextMove(this.currentMove)
+        .subscribe((data: MoveModel) => {
+          console.log('postPlayNextMove: ', data);
+          this.nextMove = data;
 
           this.calculateWinner();
-          console.log('GameOver after CPU?:', this.isGameOver);
           console.log('outcome:', this.outcome);
-        }
+          console.log('GameOver after player?:', this.isGameOver);
+          if (this.isGameOver) return;
+          else {
+            // CPU makes their move.
+            var newIdx = this.nextMove.cell - 1;
+            console.log('newIdx', newIdx);
 
-        console.log('squares:', this.squares);
+            this.squares[newIdx] = this.nextMove.value;
 
-      });
+            this.calculateWinner();
+            console.log('GameOver after CPU?:', this.isGameOver);
+            console.log('outcome:', this.outcome);
+          }
+
+          console.log('squares:', this.squares);
+        });
+    }
   }
 
   calculateWinner() {
@@ -114,14 +111,14 @@ export class BoardComponent implements OnInit {
       ) {
         this.isGameOver = true;
         this.outcome = 'Player ' + this.squares[a] + ' won the game!';
-        return
+        return;
       }
     }
 
     if (!this.squares.includes('')) {
       this.isGameOver = true;
       this.outcome = 'DRAWN GAME';
-      return
+      return;
     }
   }
 }

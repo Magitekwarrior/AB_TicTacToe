@@ -43,7 +43,7 @@ export class GameService {
     const headers = { 'content-type': 'application/json'}
     const body=JSON.stringify(move);
 
-    var postUrl = `${this.baseURL}${move.gameId}​/play-move`;
+    var postUrl = `${this.baseURL}play-move`;
 
     console.log('postPlayNextMove: ' + postUrl)
     console.log('body:' + body)
