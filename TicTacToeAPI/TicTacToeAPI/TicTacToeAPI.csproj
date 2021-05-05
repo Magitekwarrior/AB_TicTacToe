@@ -4,6 +4,14 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+    <NoWarn>$(NoWarn);1701</NoWarn>
+    <NoWarn>$(NoWarn);1702</NoWarn>
+    <NoWarn>$(NoWarn);1705</NoWarn>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>bin\Debug\netcoreapp3.1\TicTacToeAPI.xml</DocumentationFile>
     <DefineConstants>TRACE;DEBUG;NETCOREAPP3_1</DefineConstants>
