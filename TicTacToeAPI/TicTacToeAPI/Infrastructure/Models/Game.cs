@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using TicTacToeAPI.Infrastructure.Models.enums;
 
 namespace TicTacToeAPI.Infrastructure.Models
 {
@@ -66,6 +67,16 @@ namespace TicTacToeAPI.Infrastructure.Models
           break;
         }
       }
+    }
+
+    public void SetGameStatus(GameStatus gameStatus)
+    {
+      Status = gameStatus.ToString();
+    }
+
+    public void SetGameWinner(string winner)
+    {
+      Winner = winner;
     }
 
     public void GetBoardValues(out string[] gameBoard)

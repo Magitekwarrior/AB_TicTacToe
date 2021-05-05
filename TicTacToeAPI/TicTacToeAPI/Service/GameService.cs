@@ -46,26 +46,24 @@ namespace TicTacToeAPI.Service
         var currentGame = await _gameRepo.GetGame(move.GameId);
 
         var isPlayerWinner = IsPlayerWinner(currentGame, GamePlayer.Human);
+        newMove.GameCompleted = (currentGame.Status != GameStatus.Incomplete.ToString());
+        newMove.Winner = currentGame.Winner;
+
         if (!isPlayerWinner)
         {
-          newMove.GameCompleted = (currentGame.Status != GameStatus.Incomplete.ToString());
-          newMove.Winner = currentGame.Winner;
-        }
-        
-        if (!newMove.GameCompleted)
-        {
-          var nextCpuMove = GetCpuMove(currentGame);
-          // Save cpu player's move
-          await _gameRepo.SaveMove(nextCpuMove);
+          if (currentGame.Status == GameStatus.Incomplete.ToString())
+          {
+            var nextCpuMove = GetCpuMove(currentGame);
+            newMove.Cell = nextCpuMove.Cell;
+            newMove.Value = nextCpuMove.Value;
 
-          newMove.Cell = nextCpuMove.Cell;
-          newMove.Value = nextCpuMove.Value;
+            // Save cpu player's move
+            await _gameRepo.SaveMove(nextCpuMove);
 
-          var isCpuWinner = IsPlayerWinner(currentGame, GamePlayer.Cpu);
-        }
-        else
-        {
-          currentGame.Status = GameStatus.Incomplete.ToString();
+            var isCpuWinner = IsPlayerWinner(currentGame, GamePlayer.Cpu);
+            newMove.GameCompleted = (currentGame.Status != GameStatus.Incomplete.ToString());
+            newMove.Winner = currentGame.Winner;
+          }
         }
       }
       catch (Exception ex)
@@ -84,39 +82,35 @@ namespace TicTacToeAPI.Service
     /// <returns></returns>
     private bool IsPlayerWinner(Game currentGame, GamePlayer player)
     {
-      var gameComplete = false;
       var isWinner = CheckWinCondition(currentGame);
       if (!isWinner)
       {
         var isIncomplete = currentGame.AnyEmptyCell();
         if (isIncomplete)
         {
-          gameComplete = false;
-          currentGame.Status = GameStatus.Incomplete.ToString();
+          currentGame.SetGameStatus(GameStatus.Incomplete);
         }
         else
         {
-          gameComplete = true;
-          currentGame.Status = GameStatus.Draw.ToString();
+          currentGame.SetGameStatus(GameStatus.Draw);
         }
       }
       else
       { // winner found.
-        gameComplete = true;
         if (player == GamePlayer.Human)
         {
-          currentGame.Status = GameStatus.PlayerOneWon.ToString();
-          currentGame.Winner = GamePlayer.Human.ToString();
+          currentGame.SetGameStatus(GameStatus.PlayerOneWon);
+          currentGame.SetGameWinner(GamePlayer.Human.ToString());
         }
         else
         {
-          currentGame.Status = GameStatus.PlayerTwoWon.ToString();
-          currentGame.Winner = GamePlayer.Cpu.ToString();
+          currentGame.SetGameStatus(GameStatus.PlayerTwoWon);
+          currentGame.SetGameWinner(GamePlayer.Cpu.ToString());
         }
-          
+
       }
 
-      return gameComplete;
+      return isWinner;
     }
 
     /// <summary>
@@ -126,19 +120,44 @@ namespace TicTacToeAPI.Service
     /// <returns></returns>
     private bool CheckWinCondition(Game currentGame)
     {
+      bool foundWinner = false;
+
+      int[,] lines = new int[,]
+         {
+            {0,1,2},
+            {3,4,5},
+            {6,7,8},
+            {0,3,6},
+            {1,4,7},
+            {2,5,8},
+            {0,4,8},
+            {2,4,6}
+         };
+
       currentGame.GetBoardValues(out string[] board);
 
-      var isWinner =
-        board[0] == board[1] && board[1] == board[2] ||
-        board[3] == board[4] && board[4] == board[5] ||
-        board[6] == board[7] && board[7] == board[8] ||
-        board[0] == board[3] && board[3] == board[6] ||
-        board[1] == board[4] && board[4] == board[7] ||
-        board[2] == board[5] && board[5] == board[8] ||
-        board[0] == board[4] && board[4] == board[8] ||
-        board[2] == board[4] && board[4] == board[6];
+      var rowLength = lines.GetLength(0);
+      for (int i = 0; i < rowLength; i++)
+      {
+        //var [a, b, c] = lines[i];
+        var a = lines[i, 0];
+        var b = lines[i, 1];
+        var c = lines[i, 2];
 
-      return isWinner;
+
+        if ((!String.IsNullOrEmpty(board[a]) &&
+            (board[a].ToUpper() == "X" || board[a].ToUpper() == "O")))
+        {
+          if (board[a] == board[b] && board[a] == board[c])
+          {
+            foundWinner = true;
+          }
+        }
+      }
+
+      var z = 0;
+
+      return foundWinner;
     }
 
     /// <summary>
