@@ -42,7 +42,6 @@ namespace TicTacToeAPI.Infrastructure.Models
       return false;
     }
 
-
     public bool CellHasValue(int cell)
     {
       foreach (var p in GetType().GetProperties().Where(p => p.Name.Contains("Cell")))
@@ -65,6 +64,23 @@ namespace TicTacToeAPI.Infrastructure.Models
           p.SetValue(this, value);
 
           break;
+        }
+      }
+    }
+
+    public void GetBoardValues(out string[] gameBoard)
+    {
+      gameBoard = new string[9];
+      foreach (var p in GetType().GetProperties().Where(p => p.Name.Contains("Cell")))
+      {
+        int cellNo = 0;
+        for (int col = 0; col < 9; col++)
+        {
+          cellNo++;
+          if ((p.Name.Contains(cellNo.ToString())))
+          {
+            gameBoard[col] = p.GetValue(this) as string;
+          }
         }
       }
     }
