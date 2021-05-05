@@ -22,7 +22,7 @@ namespace TicTacToeAPI.Controllers
     /// <summary>
     /// Get History of games played by the specified player
     /// </summary>
-    /// <param name="PlayerName"></param>
+    /// <param name="player"></param>
     /// <returns></returns>
     [HttpGet("history/{player}")]
     public async Task<IEnumerable<Game>> History(string player)
@@ -34,7 +34,7 @@ namespace TicTacToeAPI.Controllers
     /// <summary>
     /// Start a new game or reset the current game
     /// </summary>
-    /// <param name="PlayerName"></param>
+    /// <param name="player"></param>
     /// <returns></returns>
     [HttpPost("start")]
     public async Task<Game> StartGame([FromBody] Player player)
@@ -48,7 +48,7 @@ namespace TicTacToeAPI.Controllers
     /// </summary>
     /// <param name="move"></param>
     /// <returns></returns>
-    [HttpPost("{id}/play-move")]
+    [HttpPost("play-move")]
     public async Task<NextMove> PlayMove([FromBody] PlayerMove move)
     {
       var nextMove = await _gameService.PlayNextMove(move);
