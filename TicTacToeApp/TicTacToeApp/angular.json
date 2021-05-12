@@ -36,11 +36,11 @@
             "scripts": []
           },
           "configurations": {
-            "production": {
+            "development": {
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
+                  "with": "src/environments/environment.dev.ts"
                 }
               ],
               "optimization": true,
@@ -71,8 +71,8 @@
             "browserTarget": "TicTacToeApp:build"
           },
           "configurations": {
-            "production": {
-              "browserTarget": "TicTacToeApp:build:production"
+            "development": {
+              "browserTarget": "TicTacToeApp:build:development"
             }
           }
         },
@@ -119,8 +119,8 @@
             "devServerTarget": "TicTacToeApp:serve"
           },
           "configurations": {
-            "production": {
-              "devServerTarget": "TicTacToeApp:serve:production"
+            "development": {
+              "devServerTarget": "TicTacToeApp:serve:development"
             }
           }
         }
